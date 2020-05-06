@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    let fiveDay = this.location.pathname.includes('five-day.html');
 
     function displayLocation(location){
         $('#location').text(`${location.city}, ${location.region}, ${location.countryCode}`);
@@ -7,8 +8,26 @@ $(document).ready(function() {
     function displayWeather(data){
         // TODO DISPLAY VALUES AS A ROTATING BANNER AROUND SUN AND WEATHER ICONS
         // TODO WIND DIRECTION AS A SIMPLE COMPASS?
-        let source;
+        let color;
         let direction;
+        let source;
+        // SELECT UV COLOR CODE
+        switch(true){
+            case data.uv.value < 3:
+                color = '299500';
+                break;
+            case data.uv.value >=3 && data.uv.value < 6:
+                color = 'F3E300';
+                break;
+            case data.uv.value >=6 && data.uv.value < 8:
+                color = 'F85900';
+                break;
+            case data.uv.value >=8 && data.uv.value < 11:
+                color = 'D80011';
+                break;
+            default:
+                color = '6B49C8';
+        }
         // SELECT WEATHER IMAGE
         switch (data.weather.weather[0].id) {
             //THUNDERSTORMS
@@ -37,12 +56,11 @@ $(document).ready(function() {
                 break;
             //EXTREME
             case 900: case 901: case 902: case 903: case 904: case 906: case 957: case 958: case 959: case 960: case 961: case 962:
-                source = 'extreme.png';
+                source = 'tornado.png';
                 break;
             //CLEAR SKY OR NON-CODED EVENT
             default:
-                // todo friendly image here
-                source = '';
+                source = 'clear.png';
         }
         // SELECT WIND DIRECTION
         switch (true){
@@ -74,6 +92,7 @@ $(document).ready(function() {
                 direction = '';
         }
 
+        // TODO UV SCALE NEEDS COLOR AS PER AC
         $('.iconBlock').append(`<img src='images/weather/${source}' width='100%'/>`);
         $('.tempBlock').append(
             `<div>
@@ -83,9 +102,14 @@ $(document).ready(function() {
                     ${data.unit === 'imperial' ? 'F' : 'C'}    
                 </p>
                 <p>WINDSPEED: ${data.weather.wind.speed} M/h ${direction}</p>
-                <p>WIND DIRECTION: ${data.weather.wind.deg}</p>
                 <p>HUMIDITY: ${data.weather.main.humidity}%</p>
-                <p>UV INDEX: ${Math.floor(data.uv.value)}</p>
+                <p>UV INDEX: 
+                    <span style='background-color:
+                        #${color};'>   
+                        ${Math.floor(data.uv.value)}
+                    </span>
+                </p>
+                <p>CONDITION: ${data.weather.weather[0].description}</p>
             </div>`
         )
     }
@@ -97,28 +121,40 @@ $(document).ready(function() {
         if (5 <= myHour && myHour <= 18) {
             $(".timeBlock").append('<img src="images/weather/sun.jpg" width="100%" height="auto">');
             $("main").css("background-color", "#00BFFF");
+
         } else {
             $(".timeBlock").append('<img src="images/weather/moon.png" width="100%" height="auto">');
-            $("main").css("background-color", "#00BFFF");
+            $("main").css("background-color", "#000");
+            // $("body").css("background", "url('images/stars.jpg') no-repeat center center fixed");
+            // TODO NEW MOON IMAGE AND SET BACKGROUND AS STARS
+
         }
         // SET DATE IN HEADER
         $('#date').text(date.toDateString())
     }
 
 // todo take unit, and location (if comes from search), and length of forcast 1 or 5 day
-    async function initialLoad(){
+// todo aws key management to hide my key
+    async function initialLoad(){      
         let key = 'adda7e0e1754a7e616e6eed694bcdf0e';
         let unit = 'imperial';
+        // let url = ''
 
         let getLocation = async () => {
             return await $.getJSON("http://ip-api.com/json", response => response);
         }
 
         let getWeather = async () => {
+            if(fiveDay){
+                return await $.getJSON(`https://api.openweathermap.org/data/2.5/forecast?lat=${location.lat}&lon=${location.lon}&units=${unit}&appid=${key}`, response => response);
+            }
             return await $.getJSON(`https://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&units=${unit}&appid=${key}`, response => response);
         }
 
         let getUV = async () => {
+            if(this.location.pathname.includes('five-day.html')){
+                return {};
+            }
             return await $.getJSON(`http://api.openweathermap.org/data/2.5/uvi?lat=${location.lat}&lon=${location.lon}&appid=${key}`, response => response);
         }
 
@@ -130,13 +166,22 @@ $(document).ready(function() {
             uv : await getUV(),
             unit : unit
         }
-      
-        displayWeather(weather);
-        displayLocation(location);
-        displayTimeOfDay();
+        console.log(weather)
+        if(fiveDay){
+            weather.weather.list.forEach((forecast => {
+                let weather = {};
+                weather.weather = forecast;
+                weather.uv = {value: 0};
+                console.log(weather)
+                displayWeather(weather);
+                displayLocation(location);
+            }))
+        }else{
+            displayWeather(weather);
+            displayLocation(location);
+            displayTimeOfDay();
+        }
      }
   
     initialLoad()
 })
-
- 

@@ -3,141 +3,58 @@ body {
 	color: white;
 }
 
-.header {
-	float: left;
-	clear: left;
-	background-color: navy;
-	background-image: radial-gradient(ellipse farthest-corner at 50em , #00FFFF 0%, rgba(0, 0, 255, 0) 50%, #003366 95%);
-	top: 0%;
-	min-height: 3em;
-	margin-bottom: ;
-	text-align: ;
-	color: ;
-	position: fixed;
-	z-index: 5;
-	padding-top: 1em;
-	padding-bottom: 1em;
-	/*width: 100%;
-	height: 100%;*/
-	/*color: #FFFFFF; */
-	/* display: table;*/
-	/*overflow: auto;*/
-	/*border: 5px pink dotted;*/
-}
-
-.farts{
-	color: white;
-	text-decoration: none;
-}
-.search {
-	float: right;
-	margin-top: 2%;
-}
-
-.from-control {
-	color: black;
-}
-
-h1 {
-	font-size: 6em;
-	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-}
-
-h2{
-	font-size: 2em;
-	
-}
-h3 {
-	font-size: 1em;
-	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-}
-h4 {
-	font-size: 6em;
-	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-}
-
-h5 {
-	font-size: 1em;
-	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-}
-
-
 /*WEATHER INFOR*/
-
-.blocks {
-	clear: left;
-	top: 25%;
-	/*border: dotted white 15px;*/
-}
-
 .iconBlock {
-	position: absolute;
-	top: 25%;
-	z-index: 2;
-	/*border: dotted red 5px;*/
+    position: absolute;
+    width: 100%;
+    border: dotted red 5px;
+    margin: 18% 0;
 }
 
 .tempBlock {
-	position: absolute;
-	top: 50%;
-	z-index: 3;
-	margin-top: 3%;
-	min-height: 20px;
-	cursor: pointer;
-	cursor: hand;
-	/*border: dotted blue 5px;*/
+	border: dotted blue 5px;
 }
 
-
-/*SUN OR MOON*/
-
-.timeOfDay {
-	z-index: 0;
-	/*border: dotted orange 5px;*/
+.timeBlock {
+    padding: 0;
+    position: relative;
+    border: dotted green 5px;
 }
 
-#day {
-	top: 25%;
-	position: absolute;
-	/*border: dotted yellow 5px;*/
-}
-
-#night {
-	top: 25%;
-	position: absolute;
-	/*border: dotted white 5px;*/
-}
-
-.footsy {
-	float: left;
-	clear: left;
-	background-color: ;
-	/*background-image: radial-gradient(ellipse farthest-corner at 1em , #FFFFFF 0%, rgba(0, 0, 255, 0) 0%, #FFFFFF 1000%); */
-	bottom: 0%;
-	min-height: 3em;
-	margin-bottom: ;
-	text-align: ;
-	color: ;
-	position: fixed;
-	z-index: 4;
-	padding-top: 1em;
-	padding-bottom: 1em;
-	font-size: 0.75em;
-	/*width: 100%;
-	height: 100%;*/
-	/*color: #FFFFFF; */
-	/* display: table;*/
-	/*overflow: auto;*/
-	/*border: 5px pink dotted;*/
-}
-.demo-layout-transparent {
-    /* background: url('../assets/demos/transparent.jpg') center / cover; */
+/* MDL stuff */
+.layout-transparent {
     background: black center / cover;
+}
 
-  }
-  .demo-layout-transparent .mdl-layout__header,
-  .demo-layout-transparent .mdl-layout__drawer-button {
-    /* This background is dark, so we set text to white. Use 87% black instead if
-       your background is light. */
+.layout-transparent .mdl-layout__header,
+.layout-transparent .mdl-layout__drawer-button {
     color: white;
-  }
+}
+
+.card-event.mdl-card {
+width: 20%;
+min-height: 20vw;
+background: #3E4EB8;
+}
+.card-event > .mdl-card__actions {
+border-color: rgba(255, 255, 255, 0.2);
+}
+.card-event > .mdl-card__title {
+align-items: flex-start;
+}
+.card-event > .mdl-card__title > h4 {
+margin-top: 0;
+}
+.card-event > .mdl-card__actions {
+display: flex;
+box-sizing:border-box;
+align-items: center;
+}
+.card-event > .mdl-card__actions > .material-icons {
+padding-right: 10px;
+}
+.card-event > .mdl-card__title,
+.card-event > .mdl-card__actions,
+.card-event > .mdl-card__actions > .mdl-button {
+color: #fff;
+}
