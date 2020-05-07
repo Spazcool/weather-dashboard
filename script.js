@@ -6,7 +6,9 @@ $(document).ready(function() {
     }
 
     function displayWeather(data){
-        console.log(data.weather.dt_txt);
+        let date = moment(data.weather.dt_txt).format('LL');
+        let dayOfWeek = moment(data.weather.dt_txt).format('dddd');
+
         // TODO DISPLAY VALUES AS A ROTATING BANNER AROUND SUN AND WEATHER ICONS
         // TODO WIND DIRECTION AS A SIMPLE COMPASS?
         let color;
@@ -50,6 +52,7 @@ $(document).ready(function() {
                 break;
             //CLOUDY
             case 801: case 802: case 803: case 804:
+            // case RegExp(/80[0-9]/):
                 source = 'cloud.png';
                 break;
             //WINDY
@@ -98,12 +101,12 @@ $(document).ready(function() {
         // <div class="timeBlock mdl-cell mdl-cell--4-col">
         //     <div class="iconBlock mdl-cell mdl-cell--4-col"></div>
         // </div>
-
+// todo center this shiz
         $('.mdl-grid').append(
-            `<div class="card-event mdl-card mdl-shadow--2dp">
+            `<div class="card-event mdl-card mdl-shadow--2dp mdl-cell mdl-cell--2-col">
                 <div class="timeBlock" style="max-height: 80%;">
                     <div class="iconBlock">
-                        <img src='images/weather/${source}' width='100%'/>
+                        <img src='images/weather/${source}' width='100%' />
                     </div>
                 </div>
                 <div class="mdl-card__actions mdl-card--border">
@@ -122,6 +125,8 @@ $(document).ready(function() {
                             </span>
                         </p>
                         <p>CONDITION: ${data.weather.weather[0].description}</p>
+                        <p>${dayOfWeek}</p>
+                        <p>${date}</p>
                     </div>
                 </div>
             </div>`
@@ -134,11 +139,12 @@ $(document).ready(function() {
         // SET SUN OR MOON BEHIND WEATHER
         if (5 <= myHour && myHour <= 18) {
             $(".timeBlock").append('<img src="images/weather/sun.jpg" width="100%" height="auto">');
-            $("main").css("background-color", "#00BFFF");
+            $('.card-event').css('background-color', '#00BFFF')
+            //  : $("main").css("background-color", "#00BFFF");
 
         } else {
             $(".timeBlock").append('<img src="images/weather/moon.png" width="100%" height="auto">');
-            $("main").css("background-color", "#000");
+            $(".card-event").css("background-color", "#000");
             // $("body").css("background", "url('images/stars.jpg') no-repeat center center fixed");
             // TODO NEW MOON IMAGE AND SET BACKGROUND AS STARS
 
@@ -175,6 +181,7 @@ $(document).ready(function() {
         // LOCATION
         let location = await getLocation();
         // WEATHER
+// TODO PASS THE ONE DAY THROUGH THE forEach LOOP FOR LESS CODE, NEED TO CHANGE THE VARS 
         let weather = {
             weather : await getWeather(),
             uv : await getUV(),
@@ -196,8 +203,8 @@ $(document).ready(function() {
             }))
         }else{
             displayWeather(weather);
-            displayTimeOfDay();
         }
+        displayTimeOfDay();
         displayLocation(location);
      }
   
