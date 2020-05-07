@@ -6,6 +6,7 @@ $(document).ready(function() {
     }
 
     function displayWeather(data){
+        console.log(data.weather.dt_txt);
         // TODO DISPLAY VALUES AS A ROTATING BANNER AROUND SUN AND WEATHER ICONS
         // TODO WIND DIRECTION AS A SIMPLE COMPASS?
         let color;
@@ -30,6 +31,7 @@ $(document).ready(function() {
         }
         // SELECT WEATHER IMAGE
         switch (data.weather.weather[0].id) {
+            // TODO RANGE OF CASES? OR REGEX MATCH
             //THUNDERSTORMS
             case 200: case 201: case 202: case 210: case 211: case 212: case 221: case 230: case 231: case 232:
                 source = 'lightning.png';
@@ -91,25 +93,37 @@ $(document).ready(function() {
             default:
                 direction = '';
         }
+        // TODO MAIN VIEW WASN'T IN A CARD
+        // <div class="tempBlock mdl-cell mdl-cell--4-col" title="Change measurement?"></div>
+        // <div class="timeBlock mdl-cell mdl-cell--4-col">
+        //     <div class="iconBlock mdl-cell mdl-cell--4-col"></div>
+        // </div>
 
-        // TODO UV SCALE NEEDS COLOR AS PER AC
-        $('.iconBlock').append(`<img src='images/weather/${source}' width='100%'/>`);
-        $('.tempBlock').append(
-            `<div>
-                <p>TEMP: 
-                    ${Math.floor(data.weather.main.temp)}
-                    ${String.fromCharCode(176)}
-                    ${data.unit === 'imperial' ? 'F' : 'C'}    
-                </p>
-                <p>WINDSPEED: ${data.weather.wind.speed} M/h ${direction}</p>
-                <p>HUMIDITY: ${data.weather.main.humidity}%</p>
-                <p>UV INDEX: 
-                    <span style='background-color:
-                        #${color};'>   
-                        ${Math.floor(data.uv.value)}
-                    </span>
-                </p>
-                <p>CONDITION: ${data.weather.weather[0].description}</p>
+        $('.mdl-grid').append(
+            `<div class="card-event mdl-card mdl-shadow--2dp">
+                <div class="timeBlock" style="max-height: 80%;">
+                    <div class="iconBlock">
+                        <img src='images/weather/${source}' width='100%'/>
+                    </div>
+                </div>
+                <div class="mdl-card__actions mdl-card--border">
+                    <div class="tempBlock" title="Change measurement?">
+                        <p>TEMP: 
+                            ${Math.floor(data.weather.main.temp)}
+                            ${String.fromCharCode(176)}
+                            ${data.unit === 'imperial' ? 'F' : 'C'}    
+                        </p>
+                        <p>WINDSPEED: ${data.weather.wind.speed} M/h ${direction}</p>
+                        <p>HUMIDITY: ${data.weather.main.humidity}%</p>
+                        <p>UV INDEX: 
+                            <span style='background-color:
+                                #${color};'>   
+                                ${Math.floor(data.uv.value)}
+                            </span>
+                        </p>
+                        <p>CONDITION: ${data.weather.weather[0].description}</p>
+                    </div>
+                </div>
             </div>`
         )
     }
@@ -166,22 +180,26 @@ $(document).ready(function() {
             uv : await getUV(),
             unit : unit
         }
-        console.log(weather)
+        // console.log(weather)
         if(fiveDay){
-            weather.weather.list.forEach((forecast => {
+            let days = weather.weather.list.filter((forecast) => {
+                // APPROXIMATING 5-DAY FORECAST WITH NOON FORECAST OF EACH DAY
+                return forecast.dt_txt.includes('12:00:00') == true;
+            })
+           
+            days.forEach((day => {
                 let weather = {};
-                weather.weather = forecast;
+                weather.weather = day;
                 weather.uv = {value: 0};
-                console.log(weather)
+
                 displayWeather(weather);
-                displayLocation(location);
             }))
         }else{
             displayWeather(weather);
-            displayLocation(location);
             displayTimeOfDay();
         }
+        displayLocation(location);
      }
   
     initialLoad()
-})
+})                                           
