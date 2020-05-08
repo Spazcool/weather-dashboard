@@ -16,6 +16,7 @@ body {
 }
 
 .timeBlock {
+    margin: 0 auto; 
     padding: 0;
     position: relative;
     border: dotted green 5px;
@@ -31,9 +32,10 @@ body {
     color: white;
 }
 .center-items {
+    /* text-align: center; */
     justify-content: center;
   }
-.card-event.mdl-card {
+.card-event .mdl-card {
 /* width: 100%;
 min-height: 20vw;
 background: #3E4EB8; */

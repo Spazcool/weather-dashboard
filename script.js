@@ -101,10 +101,9 @@ $(document).ready(function() {
         // <div class="timeBlock mdl-cell mdl-cell--4-col">
         //     <div class="iconBlock mdl-cell mdl-cell--4-col"></div>
         // </div>
-// todo center this shiz
         $('.mdl-grid').append(
-            `<div class="card-event mdl-card mdl-shadow--2dp mdl-cell mdl-cell--2-col">
-                <div class="timeBlock" style="max-height: 80%;">
+            `<div class="card-event mdl-card mdl-shadow--2dp mdl-cell mdl-cell--${fiveDay ? '2' : '12'}-col center-items">
+                <div class="timeBlock mdl-cell mdl-cell--${fiveDay ? '12' : '6'}-col" style="max-height: 80%;">
                     <div class="iconBlock">
                         <img src='images/weather/${source}' width='100%' />
                     </div>
