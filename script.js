@@ -96,20 +96,20 @@ $(document).ready(function() {
             default:
                 direction = '';
         }
-        // TODO MAIN VIEW WASN'T IN A CARD
-        // <div class="tempBlock mdl-cell mdl-cell--4-col" title="Change measurement?"></div>
-        // <div class="timeBlock mdl-cell mdl-cell--4-col">
-        //     <div class="iconBlock mdl-cell mdl-cell--4-col"></div>
-        // </div>
-        $('.mdl-grid').append(
-            `<div class="card-event mdl-card mdl-shadow--2dp mdl-cell mdl-cell--${fiveDay ? '2' : '12'}-col center-items">
-                <div class="timeBlock mdl-cell mdl-cell--${fiveDay ? '12' : '6'}-col" style="max-height: 80%;">
+        
+        $('.blocks').append(
+            `<div class="card-event mdl-card mdl-shadow--2dp mdl-cell mdl-cell--${fiveDay ? "2" : "12"}-col mdl-cell--12-col-phone">
+                <div class='mdl-grid'>
+                <div class="timeBlock mdl-cell mdl-cell--${fiveDay ? '12' : '6'}-col mdl-cell--12-col-phone" style="max-height: 80%;">
                     <div class="iconBlock">
                         <img src='images/weather/${source}' width='100%' />
                     </div>
                 </div>
-                <div class="mdl-card__actions mdl-card--border">
+                </div>
+                <div class="mdl-card__actions mdl-card--border center-items">
                     <div class="tempBlock" title="Change measurement?">
+                        <h4>${dayOfWeek}, ${date}</h4>
+                        <hr/>
                         <p>TEMP: 
                             ${Math.floor(data.weather.main.temp)}
                             ${String.fromCharCode(176)}
@@ -124,8 +124,7 @@ $(document).ready(function() {
                             </span>
                         </p>
                         <p>CONDITION: ${data.weather.weather[0].description}</p>
-                        <p>${dayOfWeek}</p>
-                        <p>${date}</p>
+                        
                     </div>
                 </div>
             </div>`
@@ -194,10 +193,11 @@ $(document).ready(function() {
             })
            
             days.forEach((day => {
-                let weather = {};
-                weather.weather = day;
-                weather.uv = {value: 0};
-
+                let weather = {
+                    weather : day,
+                    uv : {value: 0},
+                    unit : unit
+                }
                 displayWeather(weather);
             }))
         }else{

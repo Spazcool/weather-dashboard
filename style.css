@@ -12,7 +12,9 @@ body {
 }
 
 .tempBlock {
-	border: dotted blue 5px;
+    text-align: center;
+    border: dotted blue 5px;
+    width: 100%;
 }
 
 .timeBlock {
