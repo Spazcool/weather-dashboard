@@ -11,9 +11,12 @@ $(document).ready(function() {
 
         // TODO DISPLAY VALUES AS A ROTATING BANNER AROUND SUN AND WEATHER ICONS
         // TODO WIND DIRECTION AS A SIMPLE COMPASS?
+        let card;
         let color;
+        let description = (data.weather.weather[0].description); 
         let direction;
         let source;
+
         // SELECT UV COLOR CODE
         switch(true){
             case data.uv.value < 3:
@@ -96,39 +99,69 @@ $(document).ready(function() {
             default:
                 direction = '';
         }
-        
-        $('.blocks').append(
-            `<div class="card-event mdl-card mdl-shadow--2dp mdl-cell mdl-cell--${fiveDay ? "2" : "12"}-col mdl-cell--12-col-phone">
-                <div class='mdl-grid'>
-                <div class="timeBlock mdl-cell mdl-cell--${fiveDay ? '12' : '6'}-col mdl-cell--12-col-phone" style="max-height: 80%;">
-                    <div class="iconBlock">
-                        <img src='images/weather/${source}' width='100%' />
-                    </div>
-                </div>
-                </div>
-                <div class="mdl-card__actions mdl-card--border center-items">
-                    <div class="tempBlock" title="Change measurement?">
-                        <h4>${dayOfWeek}, ${date}</h4>
-                        <hr/>
-                        <p>TEMP: 
+
+        if(fiveDay){
+            card = 
+                `<div class="card-event mdl-card mdl-shadow--2dp mdl-cell mdl-cell--2-col mdl-cell--12-col-phone" style="border-radius: 5px">
+                    <div class="timeBlock mdl-cell mdl-cell--12-col mdl-cell--12-col-phone" style="max-height: 80%;">
+                        <h4 style='position: absolute; margin-top: 2px; width: 100%; text-align: right;' title=${data.unit === 'imperial' ? 'Farenheit' : 'Celcius'}>
                             ${Math.floor(data.weather.main.temp)}
                             ${String.fromCharCode(176)}
-                            ${data.unit === 'imperial' ? 'F' : 'C'}    
-                        </p>
-                        <p>WINDSPEED: ${data.weather.wind.speed} M/h ${direction}</p>
-                        <p>HUMIDITY: ${data.weather.main.humidity}%</p>
-                        <p>UV INDEX: 
-                            <span style='background-color:
-                                #${color};'>   
-                                ${Math.floor(data.uv.value)}
-                            </span>
-                        </p>
-                        <p>CONDITION: ${data.weather.weather[0].description}</p>
-                        
+                        </h4>
+                        <div class="iconBlock">
+                            <img src='images/weather/${source}' width='100%' />
+                        </div>
                     </div>
-                </div>
-            </div>`
-        )
+                    <div class="mdl-card__actions mdl-card--border">
+                        <div class="tempBlock">
+                            <h5>${dayOfWeek}, ${date}</h5>
+                            <hr/>
+                            <ul>
+                                <li>${description[0].toUpperCase() + description.slice(1)}</li>
+                                <li>Wind: ${data.weather.wind.speed} mph ${direction}</li>
+                                <li>Humidity: ${data.weather.main.humidity}%</li>
+                            </ul>                        
+                        </div>
+                    </div>
+                </div>`
+        }else{
+            card =
+                `<div class="card-event mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--12-col-phone">
+                    <div class="mdl-grid">
+                        <div class="mdl-cell mdl-cell--3-col mdl-cell--12-col-phone"></div>
+                        <div class="mdl-cell mdl-cell--6-col mdl-cell--12-col-phone">
+                            <div class="timeBlock"style="max-height: 80%;">
+                                <h2 style='position: absolute; margin-top: 2px; width: 100%; text-align: right;' title=${data.unit === 'imperial' ? 'Farenheit' : 'Celcius'}>
+                                    ${Math.floor(data.weather.main.temp)}
+                                    ${String.fromCharCode(176)}         
+                                </h2>
+                                <div class="iconBlock">
+                                    <img src='images/weather/${source}' width='100%' />
+                                </div>
+                            </div>
+                        </div>
+                        <div class='mdl-cell mdl-cell--3-col mdl-cell--12-col-phone'>
+                            <div class="tempBlock spotlight">
+                                <h3>${dayOfWeek}, ${date}</h3>
+                                <hr/>
+                                <ul>
+                                    <li>${description[0].toUpperCase() + description.slice(1)}</li>
+                                    <li>Wind: ${Math.floor(data.weather.wind.speed)} mph ${direction}</li>
+                                    <li>Humidity: ${data.weather.main.humidity}%</li>
+                                    <li>UV Index: 
+                                        <span style='background-color:
+                                            #${color};'>   
+                                            ${Math.floor(data.uv.value)}
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>`
+        }
+
+        $('.blocks').append(card) 
     }
 
     function displayTimeOfDay(){
@@ -148,16 +181,17 @@ $(document).ready(function() {
 
         }
         // SET DATE IN HEADER
-        $('#date').text(date.toDateString())
+        fiveDay ? '' : $('#date').text(date.toDateString());
     }
 
 // todo take unit, and location (if comes from search), and length of forcast 1 or 5 day
 // todo aws key management to hide my key
-    async function initialLoad(){      
+    async function initialLoad(city){      
         let key = 'adda7e0e1754a7e616e6eed694bcdf0e';
         let unit = 'imperial';
+        let location;
         // let url = ''
-
+       
         let getLocation = async () => {
             return await $.getJSON("http://ip-api.com/json", response => response);
         }
@@ -177,7 +211,9 @@ $(document).ready(function() {
         }
 
         // LOCATION
-        let location = await getLocation();
+        if(!city){
+            location = await getLocation();
+        }
         // WEATHER
 // TODO PASS THE ONE DAY THROUGH THE forEach LOOP FOR LESS CODE, NEED TO CHANGE THE VARS 
         let weather = {
@@ -203,9 +239,20 @@ $(document).ready(function() {
         }else{
             displayWeather(weather);
         }
+
         displayTimeOfDay();
         displayLocation(location);
      }
   
     initialLoad()
-})                                           
+
+    $('#search').on('click', (e) => {
+        e.preventDefault();
+        if($('#cityToSearch').val()){
+            console.log($('#cityToSearch').val());
+            initialLoad($('#cityToSearch').val());
+        }
+    })
+
+
+})                                          

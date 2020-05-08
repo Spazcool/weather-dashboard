@@ -12,7 +12,7 @@
 
             <header class="mdl-layout__header mdl-layout__header--transparent">
                 <div class="mdl-layout__header-row">
-                    <span class="mdl-layout-title">Weather Dashboard</span>
+                    <span class="mdl-layout-title">Weather Spotlight</span>
                     <div class="mdl-layout-spacer"></div>
                     <nav class="mdl-navigation">
                         <span class="mdl-navigation__link" id='date'></span> 
@@ -22,46 +22,44 @@
             </header>
 
             <div class="mdl-layout__drawer">
-                <span class="mdl-layout-title">Weather Dashboard</span>
+                <span class="mdl-layout-title">Dashboard</span>
                 <nav class="mdl-navigation">
-                    <a class="mdl-navigation__link" href="index.html">Today</a>
+                    <a class="mdl-navigation__link" href="index.html">Spotlight</a>
                     <a class="mdl-navigation__link" href="five-day.html">5-Day</a>
-                    <a class="mdl-navigation__link" href="">Search City</a>
                     <form action="#" class="mdl-navigation__link" >
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
-                            <label class="mdl-button mdl-js-button mdl-button--icon" for="sample6">
+                            <label class="mdl-button mdl-js-button mdl-button--icon" for="citySearch">
                                 <i class="material-icons">search</i>
                             </label>
                             <div class="mdl-textfield__expandable-holder">
-                                <input class="mdl-textfield__input" type="text" id="sample6">
+                                <input class="mdl-textfield__input" type="text" id="cityToSearch">
                                 <label class="mdl-textfield__label" for="sample-expandable">Expandable Input</label>
                             </div>
                         </div>
+                        <br>
+                        <!-- TODO REMOVE EXANDING SEARCH INPUT, HAVE STATIC WITH SMALL BUTTON TO ITS RIGHT -->
+                        <button id='search' class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                            <i class="material-icons">search</i>
+
+                        </button>
                     </form>
                 </nav>
             </div>
 
             <main class="mdl-layout__content">
-                <div class="mdl-grid center-items blocks"></div>
+                <div class="mdl-grid blocks"></div>
             </main>
 
             <footer class="mdl-mini-footer">
-                <div class="mdl-mini-footer__left-section">
-                    <div class="mdl-logo">
-                        More Information
-                    </div>
-                    <ul class="mdl-mini-footer__link-list">
-                        <li><a href="#">Help</a></li>
-                        <li><a href="#">Privacy and Terms</a></li>
-                        <li><a href="#">User Agreement</a></li>
-                    </ul>
-                </div>
+                <ul class="mdl-mini-footer__link-list">
+                    <li><a href="index.html">Weather Spotlight</a></li>
+                    <li><a href="five-day.html">Five-Day Forecast</a></li>
+                </ul>
                 <div class="mdl-mini-footer__right-section">
-                    <button class="mdl-mini-footer__social-btn"></button>
-                    <button class="mdl-mini-footer__social-btn"></button>
-                    <button class="mdl-mini-footer__social-btn"></button>
+                    <a href='https://www.spazcool.com'><img src='./images/favicon.ico'/></a>
                 </div>
             </footer>
+
         </div>
 
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

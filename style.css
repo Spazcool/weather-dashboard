@@ -3,40 +3,60 @@ body {
 	color: white;
 }
 
-/*WEATHER INFOR*/
+/*WEATHER INFO*/
 .iconBlock {
     position: absolute;
     width: 100%;
-    border: dotted red 5px;
-    margin: 18% 0;
+    margin-top: 18%;
 }
 
 .tempBlock {
-    text-align: center;
-    border: dotted blue 5px;
     width: 100%;
 }
 
+/* spotlight page only  */
+.spotlight{
+    margin: 75% auto; 
+}
+
+@media only screen and (max-width: 600px) {
+    .spotlight{
+        margin: auto; 
+    }
+  }
+
+.tempBlock > h3, h5 {
+    text-align: center;
+}
+
+.tempBlock > ul >  li {
+    font-size: 1.5em;
+}
+
 .timeBlock {
-    margin: 0 auto; 
     padding: 0;
     position: relative;
-    border: dotted green 5px;
 }
 
 /* MDL stuff */
 .layout-transparent {
-    background: black center / cover;
+    background: rgb(27, 27, 27) center / cover;
 }
 
 .layout-transparent .mdl-layout__header,
 .layout-transparent .mdl-layout__drawer-button {
     color: white;
 }
+
+/* FIVE DAY VIEW, CENTER THE CARDS */
 .center-items {
-    /* text-align: center; */
     justify-content: center;
-  }
+}
+
+.mdl-layout__drawer > span{
+    /* text-align: center; */
+}
+
 .card-event .mdl-card {
 /* width: 100%;
 min-height: 20vw;
