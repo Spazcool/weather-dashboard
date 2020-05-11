@@ -112,7 +112,7 @@ $(document).ready(function() {
                             <img src='images/weather/${source}' width='100%' />
                         </div>
                     </div>
-                    <div class="mdl-card__actions mdl-card--border">
+                    <div class="mdl-card__actions mdl-card--border center-items">
                         <div class="tempBlock">
                             <h5>${dayOfWeek}, ${date}</h5>
                             <hr/>
@@ -127,10 +127,10 @@ $(document).ready(function() {
         }else{
             card =
                 `<div class="card-event mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--12-col-phone">
-                    <div class="mdl-grid">
+                    <div class="mdl-grid" style=" width: 100%;">
                         <div class="mdl-cell mdl-cell--3-col mdl-cell--12-col-phone"></div>
                         <div class="mdl-cell mdl-cell--6-col mdl-cell--12-col-phone">
-                            <div class="timeBlock"style="max-height: 80%;">
+                            <div class="timeBlock" style="max-height: 80%; width: 100%;">
                                 <h2 style='position: absolute; margin-top: 2px; width: 100%; text-align: right;' title=${data.unit === 'imperial' ? 'Farenheit' : 'Celcius'}>
                                     ${Math.floor(data.weather.main.temp)}
                                     ${String.fromCharCode(176)}         
@@ -168,17 +168,14 @@ $(document).ready(function() {
         let date = new Date();
         let myHour = (date.getUTCHours()) - (date.getTimezoneOffset() / 60);
         // SET SUN OR MOON BEHIND WEATHER
-        if (5 <= myHour && myHour <= 18) {
-            $(".timeBlock").append('<img src="images/weather/sun.jpg" width="100%" height="auto">');
-            $('.card-event').css('background-color', '#00BFFF')
-            //  : $("main").css("background-color", "#00BFFF");
-
+        if (5 <= myHour && myHour <= 18 || fiveDay) {
+            $(".timeBlock").append('<img src="images/weather/sun.jpg" width="100%" height="auto"/>');
+            $('.card-event').css('background-color', '#00BFFF');
         } else {
-            $(".timeBlock").append('<img src="images/weather/moon.png" width="100%" height="auto">');
+            $(".timeBlock").append('<img src="images/weather/moon.png" width="100%" height="auto"/>');
             $(".card-event").css("background-color", "#000");
             // $("body").css("background", "url('images/stars.jpg') no-repeat center center fixed");
             // TODO NEW MOON IMAGE AND SET BACKGROUND AS STARS
-
         }
         // SET DATE IN HEADER
         fiveDay ? '' : $('#date').text(date.toDateString());
@@ -186,42 +183,57 @@ $(document).ready(function() {
 
 // todo take unit, and location (if comes from search), and length of forcast 1 or 5 day
 // todo aws key management to hide my key
-    async function initialLoad(city){      
-        let key = 'adda7e0e1754a7e616e6eed694bcdf0e';
+    async function initialLoad(search){
+        let weatherKey = 'adda7e0e1754a7e616e6eed694bcdf0e';
+        let locationKey = 'ykYwGNDs8r4jibep0lLE9rmnquq5h5l7';
         let unit = 'imperial';
         let location;
-        // let url = ''
        
-        let getLocation = async () => {
+        let getLocation = async (search) => {
+            if(search){
+                // HARDCODED MCDONALDS, AS THE API LIKES TO HAVE THAT EXTRA PARAM IN FRONT OF CITY, ALSO I MIGHT HAVE BEEN HUNGRY
+                return await $.getJSON(`https://api.tomtom.com/search/2/geocode/mcdonalds%2C%20${search}.json?countrySet=US&key=${locationKey}`, 
+                    (response) => {return response})
+                    .then((data) => {
+                        let obj = {
+                            countryCode : data.results[0].address.countryCode,
+                            region : data.results[0].address.countrySubdivision,
+                            city : data.results[0].address.municipality,
+                            lat : data.results[0].position.lat,
+                            lon : data.results[0].position.lon
+                        }
+                        return obj;
+                    });
+            }
             return await $.getJSON("http://ip-api.com/json", response => response);
         }
 
         let getWeather = async () => {
             if(fiveDay){
-                return await $.getJSON(`https://api.openweathermap.org/data/2.5/forecast?lat=${location.lat}&lon=${location.lon}&units=${unit}&appid=${key}`, response => response);
+                return await $.getJSON(
+                    `https://api.openweathermap.org/data/2.5/forecast?lat=${location.lat}&lon=${location.lon}&units=${unit}&appid=${weatherKey}`, response => response);
             }
-            return await $.getJSON(`https://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&units=${unit}&appid=${key}`, response => response);
+            return await $.getJSON(`https://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&units=${unit}&appid=${weatherKey}`, response => response);
         }
 
         let getUV = async () => {
             if(this.location.pathname.includes('five-day.html')){
                 return {};
             }
-            return await $.getJSON(`http://api.openweathermap.org/data/2.5/uvi?lat=${location.lat}&lon=${location.lon}&appid=${key}`, response => response);
+            return await $.getJSON(`http://api.openweathermap.org/data/2.5/uvi?lat=${location.lat}&lon=${location.lon}&appid=${weatherKey}`, response => response);
         }
 
-        // LOCATION
-        if(!city){
-            location = await getLocation();
-        }
+        location = await getLocation(search ? search : '');
+        console.log(location)
+
         // WEATHER
 // TODO PASS THE ONE DAY THROUGH THE forEach LOOP FOR LESS CODE, NEED TO CHANGE THE VARS 
         let weather = {
             weather : await getWeather(),
-            uv : await getUV(),
+            uv : search ? {value : 0} : await getUV(),
             unit : unit
         }
-        // console.log(weather)
+        console.log(weather)
         if(fiveDay){
             let days = weather.weather.list.filter((forecast) => {
                 // APPROXIMATING 5-DAY FORECAST WITH NOON FORECAST OF EACH DAY
@@ -249,10 +261,8 @@ $(document).ready(function() {
     $('#search').on('click', (e) => {
         e.preventDefault();
         if($('#cityToSearch').val()){
-            console.log($('#cityToSearch').val());
             initialLoad($('#cityToSearch').val());
+            $('.blocks').html('') 
         }
     })
-
-
 })                                          

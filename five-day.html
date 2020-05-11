@@ -22,23 +22,23 @@
                     </nav>
                 </div>
             </header>
-
+   
             <div class="mdl-layout__drawer">
-                <span class="mdl-layout-title">Weather Dashboard</span>
+                <span class="mdl-layout-title">Dashboard</span>
                 <nav class="mdl-navigation">
                     <a class="mdl-navigation__link" href="index.html">Spotlight</a>
                     <a class="mdl-navigation__link" href="five-day.html">5-Day</a>
-                    <a class="mdl-navigation__link" href="">Search City</a>
+
                     <form action="#" class="mdl-navigation__link" >
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
-                            <label class="mdl-button mdl-js-button mdl-button--icon" for="sample6">
-                                <i class="material-icons">search</i>
-                            </label>
-                            <div class="mdl-textfield__expandable-holder">
-                                <input class="mdl-textfield__input" type="text" id="sample6">
-                                <label class="mdl-textfield__label" for="sample-expandable">Expandable Input</label>
-                            </div>
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input class="mdl-textfield__input" type="text" id="cityToSearch" placeholder="boston, ma">
+                            <label class="mdl-textfield__label" for="cityToSearch">Input</label>    
+                                          
                         </div>
+                        <button id='search' class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                            <i class="material-icons">search</i>
+                        </button>  
+                        <!-- TODO REMOVE EXANDING SEARCH INPUT, HAVE STATIC WITH SMALL BUTTON TO ITS RIGHT -->
                     </form>
                 </nav>
             </div>
