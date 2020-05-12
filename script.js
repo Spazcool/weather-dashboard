@@ -5,12 +5,29 @@ $(document).ready(function() {
         $('#location').text(`${location.city}, ${location.region}, ${location.countryCode}`);
     }
 
+    function displayPreviousSearches(){
+        let searches = localStorage.getItem('previousSearches') ? JSON.parse(localStorage.getItem('previousSearches')) : '';
+        if(searches.length){
+            $('.previous').remove();
+            searches.forEach(search => {
+                $('.sidePanel').append(`<button class="mdl-navigation__link mdl-button previous" style="padding-bottom: 3em;" data-key=${search.key}>${search.term}</button>`)
+            })
+
+            $('button[data-key]').on('click', function(e){
+                e.preventDefault();
+                let key = $(this).attr('data-key');
+                let choice = searches.filter(search => search.key == key)[0].term;
+                loadData(choice)
+            })
+        }  
+    }
+
     function displayWeather(data){
         let date = moment(data.weather.dt_txt).format('LL');
         let dayOfWeek = moment(data.weather.dt_txt).format('dddd');
 
-        // TODO DISPLAY VALUES AS A ROTATING BANNER AROUND SUN AND WEATHER ICONS
-        // TODO WIND DIRECTION AS A SIMPLE COMPASS?
+// TODO uv index is too small, needs to be bigger span
+// TODO WIND DIRECTION AS A SIMPLE COMPASS?
         let card;
         let color;
         let description = (data.weather.weather[0].description); 
@@ -36,7 +53,7 @@ $(document).ready(function() {
         }
         // SELECT WEATHER IMAGE
         switch (data.weather.weather[0].id) {
-            // TODO RANGE OF CASES? OR REGEX MATCH
+// TODO RANGE OF CASES? OR REGEX MATCH
             //THUNDERSTORMS
             case 200: case 201: case 202: case 210: case 211: case 212: case 221: case 230: case 231: case 232:
                 source = 'lightning.png';
@@ -163,7 +180,7 @@ $(document).ready(function() {
 
         $('.blocks').append(card) 
     }
-
+// TODO GET TIME OF DAY OF SEARCHED CITY TO CHANGE SUN OR MOON
     function displayTimeOfDay(){
         let date = new Date();
         let myHour = (date.getUTCHours()) - (date.getTimezoneOffset() / 60);
@@ -175,15 +192,13 @@ $(document).ready(function() {
             $(".timeBlock").append('<img src="images/weather/moon.png" width="100%" height="auto"/>');
             $(".card-event").css("background-color", "#000");
             // $("body").css("background", "url('images/stars.jpg') no-repeat center center fixed");
-            // TODO NEW MOON IMAGE AND SET BACKGROUND AS STARS
+// TODO NEW MOON IMAGE AND SET BACKGROUND AS STARS
         }
         // SET DATE IN HEADER
         fiveDay ? '' : $('#date').text(date.toDateString());
     }
 
-// todo take unit, and location (if comes from search), and length of forcast 1 or 5 day
-// todo aws key management to hide my key
-    async function initialLoad(search){
+    async function loadData(search){
         let weatherKey = 'adda7e0e1754a7e616e6eed694bcdf0e';
         let locationKey = 'ykYwGNDs8r4jibep0lLE9rmnquq5h5l7';
         let unit = 'imperial';
@@ -192,17 +207,21 @@ $(document).ready(function() {
         let getLocation = async (search) => {
             if(search){
                 // HARDCODED MCDONALDS, AS THE API LIKES TO HAVE THAT EXTRA PARAM IN FRONT OF CITY, ALSO I MIGHT HAVE BEEN HUNGRY
+                // HARDCODED TO US, BETTER RESULTS WERE PROVIDED WITH THAT ADDIOTNAL PARAM AND THE EXPECTED USERS WILL ALL HAIL FROM THERE
                 return await $.getJSON(`https://api.tomtom.com/search/2/geocode/mcdonalds%2C%20${search}.json?countrySet=US&key=${locationKey}`, 
                     (response) => {return response})
                     .then((data) => {
-                        let obj = {
-                            countryCode : data.results[0].address.countryCode,
-                            region : data.results[0].address.countrySubdivision,
-                            city : data.results[0].address.municipality,
-                            lat : data.results[0].position.lat,
-                            lon : data.results[0].position.lon
+                        if(data.results){
+                            let obj = {
+                                countryCode : data.results[0].address.countryCode,
+                                region : data.results[0].address.countrySubdivision,
+                                city : data.results[0].address.municipality,
+                                lat : data.results[0].position.lat,
+                                lon : data.results[0].position.lon
+                            }
+                            return obj;
                         }
-                        return obj;
+                        // TODO how do error handling? SEARCH FOR aaaaa returns an empty array
                     });
             }
             return await $.getJSON("http://ip-api.com/json", response => response);
@@ -210,8 +229,7 @@ $(document).ready(function() {
 
         let getWeather = async () => {
             if(fiveDay){
-                return await $.getJSON(
-                    `https://api.openweathermap.org/data/2.5/forecast?lat=${location.lat}&lon=${location.lon}&units=${unit}&appid=${weatherKey}`, response => response);
+                return await $.getJSON(`https://api.openweathermap.org/data/2.5/forecast?lat=${location.lat}&lon=${location.lon}&units=${unit}&appid=${weatherKey}`, response => response);
             }
             return await $.getJSON(`https://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&units=${unit}&appid=${weatherKey}`, response => response);
         }
@@ -224,16 +242,16 @@ $(document).ready(function() {
         }
 
         location = await getLocation(search ? search : '');
-        console.log(location)
 
         // WEATHER
-// TODO PASS THE ONE DAY THROUGH THE forEach LOOP FOR LESS CODE, NEED TO CHANGE THE VARS 
         let weather = {
             weather : await getWeather(),
             uv : search ? {value : 0} : await getUV(),
             unit : unit
         }
-        console.log(weather)
+        // RESET VIEW BEFORE LOADING NEW VIEW
+        $('.blocks').html('')
+
         if(fiveDay){
             let days = weather.weather.list.filter((forecast) => {
                 // APPROXIMATING 5-DAY FORECAST WITH NOON FORECAST OF EACH DAY
@@ -254,15 +272,32 @@ $(document).ready(function() {
 
         displayTimeOfDay();
         displayLocation(location);
+        displayPreviousSearches()
      }
-  
-    initialLoad()
+     
+     function pushToSearchList(term){
+         let key = new Date().getTime();
+         let saved = localStorage.getItem('previousSearches') ? JSON.parse(localStorage.getItem('previousSearches')) : [];
+         if(saved.length){
+            if(saved.length > 4){saved.shift();}
+            saved.push({key : key, term : term})
+            localStorage.setItem('previousSearches', JSON.stringify(saved))
+         }else{
+            let obj = {key : key, term : term};
+            localStorage.setItem('previousSearches', JSON.stringify([obj]))
+         }
+     }
+
+//  TRIGGERING EVENTS
+    loadData()
 
     $('#search').on('click', (e) => {
         e.preventDefault();
-        if($('#cityToSearch').val()){
-            initialLoad($('#cityToSearch').val());
-            $('.blocks').html('') 
+        let term = $('#cityToSearch');
+        if(term.val().length){
+            loadData(term.val());
+            pushToSearchList(term.val());
+            term.val('');
         }
     })
 })                                          

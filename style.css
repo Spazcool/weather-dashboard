@@ -38,6 +38,10 @@ body {
     position: relative;
 }
 
+.previous {
+    display: block;
+    padding-bottom: 200px;
+}
 /* MDL stuff */
 .layout-transparent {
     background: rgb(27, 27, 27) center / cover;
