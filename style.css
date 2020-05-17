@@ -42,6 +42,17 @@ body {
     display: block;
     padding-bottom: 200px;
 }
+
+#search{
+    width: 100%;
+}
+
+#uvIndex{
+    text-align: center; 
+    display: inline-block; 
+    width: 2em;
+}
+
 /* MDL stuff */
 .layout-transparent {
     background: rgb(27, 27, 27) center / cover;
