@@ -2,8 +2,8 @@
 A simple web application that displays current & future weather forecasts. Initial loads pull user geolocation, based on their IP. Search functionality allows the user find the current & future weather for any US city. Returning users are greeted with their previously searched city displayed, to save unnecessary keystrokes. This app runs in the browser and features dynamically updated HTML and CSS powered by JavaScript. It also features a clean and polished user interface and is responsive, ensuring that it adapts to multiple screen sizes.
 
 <p align="center">
-   <img width="70%" height="300vh" src=".images/desktop.gif">
-   <img width="20%" height="300vh" src=".images/mobile.gif">
+   <img width="70%" height="300vh" src="./images/desktop.gif">
+   <img width="20%" height="300vh" src="./images/mobile.gif">
 </p>
 
 ## Getting Started
