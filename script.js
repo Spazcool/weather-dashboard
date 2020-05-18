@@ -287,26 +287,26 @@ async function loadData(search){
     displayPreviousSearches()
 }
 
-// function alreadyExists(term){
-
-//     let list = JSON.parse(localStorage.getItem('previousSearches'));
-//     list.forEach((item)=> {
-//         if(item.term == term){
-//             return true;
-//         }
-//     })
-//     return false;
-// }
+function alreadyExists(term){ 
+    let list = JSON.parse(localStorage.getItem('previousSearches'));
+    let bool = false;
+    list.forEach((item) => {
+        if(Object.values(item)[1] === term){
+            bool = true;
+        }
+    });
+    return bool;
+}
 
 function pushToSearchList(term){
     let key = new Date().getTime();
     let saved = localStorage.getItem('previousSearches') ? JSON.parse(localStorage.getItem('previousSearches')) : [];
     if(saved.length){
-        // alreadyExists(term)
-        // if(alreadyExists(term)){console.log('here?');}
-        if(saved.length > 4){saved.shift();} // ONLY STORE FIVE PREVIOUS SEARCHES
-        saved.push({key : key, term : term})
-        localStorage.setItem('previousSearches', JSON.stringify(saved))
+        if(!alreadyExists(term)){
+            if(saved.length > 4){ saved.shift(); } // ONLY STORE FIVE PREVIOUS SEARCHES
+            saved.push({key : key, term : term});
+            localStorage.setItem('previousSearches', JSON.stringify(saved));
+        }
     }else{
         let obj = {key : key, term : term};
         localStorage.setItem('previousSearches', JSON.stringify([obj]))

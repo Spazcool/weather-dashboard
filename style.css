@@ -23,7 +23,7 @@ body {
     .spotlight{
         margin: auto; 
     }
-  }
+}
 
 .tempBlock > h3, h5 {
     text-align: center;
@@ -41,6 +41,14 @@ body {
 .previous {
     display: block;
     padding-bottom: 200px;
+}
+
+.previous::hover{
+    cursor: pointer;
+}
+
+#clear::hover{
+    cursor: pointer;
 }
 
 #search{
@@ -68,34 +76,30 @@ body {
     justify-content: center;
 }
 
-.mdl-layout__drawer > span{
-    /* text-align: center; */
+.card-event > .mdl-card__actions {
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
-.card-event .mdl-card {
-/* width: 100%;
-min-height: 20vw;
-background: #3E4EB8; */
-}
-.card-event > .mdl-card__actions {
-border-color: rgba(255, 255, 255, 0.2);
-}
 .card-event > .mdl-card__title {
-align-items: flex-start;
+    align-items: flex-start;
 }
+
 .card-event > .mdl-card__title > h4 {
-margin-top: 0;
+    margin-top: 0;
 }
+
 .card-event > .mdl-card__actions {
-display: flex;
-box-sizing:border-box;
-align-items: center;
+    display: flex;
+    box-sizing:border-box;
+    align-items: center;
 }
+
 .card-event > .mdl-card__actions > .material-icons {
-padding-right: 10px;
+    padding-right: 10px;
 }
+
 .card-event > .mdl-card__title,
 .card-event > .mdl-card__actions,
 .card-event > .mdl-card__actions > .mdl-button {
-color: #fff;
+    color: #fff;
 }
