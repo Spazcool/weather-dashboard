@@ -255,10 +255,11 @@ async function loadData(search){
     }
 
     location = await getLocation(search ? search : '');
-    let locationArr = location.loc.split(",");
-    location.lat = locationArr[0];
-    location.lon = locationArr[1];
-    console.log(location)
+    if(location.loc){
+        let locationArr = location.loc.split(",");
+        location.lat = locationArr[0];
+        location.lon = locationArr[1];
+    }
     // WEATHER
     let weather = {
         weather : await getWeather(),
