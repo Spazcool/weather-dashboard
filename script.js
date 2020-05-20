@@ -236,7 +236,7 @@ async function loadData(search){
                     // TODO how do error handling? SEARCH FOR aaaaa returns an empty array
                 });
         }
-        return await $.getJSON("http://ip-api.com/json", response => response);
+        return await $.getJSON("//ip-api.com/json", response => response);
     }
 
     let getWeather = async () => {
