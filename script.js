@@ -255,6 +255,9 @@ async function loadData(search){
     }
 
     location = await getLocation(search ? search : '');
+    let locationArr = location.loc.split(",");
+    location.lat = locationArr[0];
+    location.lon = locationArr[1];
     console.log(location)
     // WEATHER
     let weather = {
