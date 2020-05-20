@@ -255,7 +255,7 @@ async function loadData(search){
     }
 
     location = await getLocation(search ? search : '');
-
+    console.log(location)
     // WEATHER
     let weather = {
         weather : await getWeather(),
