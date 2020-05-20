@@ -251,7 +251,7 @@ async function loadData(search){
         if(this.location.pathname.includes('five-day.html')){
             return {};
         }
-        return await $.getJSON(`http://api.openweathermap.org/data/2.5/uvi?lat=${location.lat}&lon=${location.lon}&appid=${weatherKey}`, response => response);
+        return await $.getJSON(`https://api.openweathermap.org/data/2.5/uvi?lat=${location.lat}&lon=${location.lon}&appid=${weatherKey}`, response => response);
     }
 
     location = await getLocation(search ? search : '');
