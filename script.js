@@ -237,7 +237,7 @@ async function loadData(search){
                 });
         }
         
-        return await $.getJSON("https://ipinfo.io?token=5fcea70b36eb6", response => response);
+        return await $.getJSON("https://ipinfo.io?token=5fcea70b36eb66", response => response);
     }
 
     let getWeather = async () => {
