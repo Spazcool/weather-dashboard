@@ -236,7 +236,8 @@ async function loadData(search){
                     // TODO how do error handling? SEARCH FOR aaaaa returns an empty array
                 });
         }
-        return await $.getJSON("//ip-api.com/json", response => response);
+        
+        return await $.getJSON("https://ipinfo.io?token=5fcea70b36eb6", response => response);
     }
 
     let getWeather = async () => {
