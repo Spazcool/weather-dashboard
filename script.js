@@ -286,7 +286,6 @@ async function loadData(search){
   }else{
       displayWeather(weather);
   }
-console.log(location)
   displayTimeOfDay();
   displayLocation(location);
   displayPreviousSearches()
