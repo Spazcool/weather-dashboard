@@ -6,7 +6,7 @@ $(document).ready(function() {
 let fiveDay = this.location.pathname.includes('five-day.html');
 
 function displayLocation(location){
-    $('#location').text(`${location.city}, ${location.region}, ${location.countryCode}`);
+    $('#location').text(`${location.city}, ${location.region}`);
 }
 
 function displayPreviousSearches(){
