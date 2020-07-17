@@ -236,7 +236,8 @@ async function loadData(search){
                     // TODO how do error handling? SEARCH FOR aaaaa returns an empty array
                 });
         }
-        return await $.getJSON("http://ip-api.com/json", response => response);
+        
+        return await $.getJSON("https://ipinfo.io?token=5fcea70b36eb66", response => response);
     }
 
     let getWeather = async () => {
@@ -250,11 +251,15 @@ async function loadData(search){
         if(this.location.pathname.includes('five-day.html')){
             return {};
         }
-        return await $.getJSON(`http://api.openweathermap.org/data/2.5/uvi?lat=${location.lat}&lon=${location.lon}&appid=${weatherKey}`, response => response);
+        return await $.getJSON(`https://api.openweathermap.org/data/2.5/uvi?lat=${location.lat}&lon=${location.lon}&appid=${weatherKey}`, response => response);
     }
 
     location = await getLocation(search ? search : '');
-
+    if(location.loc){
+        let locationArr = location.loc.split(",");
+        location.lat = locationArr[0];
+        location.lon = locationArr[1];
+    }
     // WEATHER
     let weather = {
         weather : await getWeather(),
